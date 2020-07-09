@@ -15,18 +15,18 @@ from .constants import (
     RDS_PURCHASE_OPTION
 )
 
-
 OFFER_CLASS_MAP = {}
-
 
 logger = logging.getLogger(__name__)
 
 
 def implements(offer_name):
     """Decorator to keep track of offer-specific class implementations."""
+
     def wrapper(cls):
         OFFER_CLASS_MAP[offer_name] = cls
         return cls
+
     return wrapper
 
 
@@ -94,7 +94,7 @@ class AWSOffer(object):
 
     def _generate_reverse_sku_mapping(self,
                                       *attribute_names,  # type: str
-                                      **kwargs           # type: Dict[str, str]
+                                      **kwargs  # type: Dict[str, str]
                                       ):
         # type: (...) -> Dict[str, str]
 
@@ -139,7 +139,6 @@ class AWSOffer(object):
 
 @implements('AmazonEC2')
 class EC2Offer(AWSOffer):
-
     HOURS_IN_YEAR = 24 * 365
 
     def __init__(self, *args, **kwargs):
@@ -164,13 +163,13 @@ class EC2Offer(AWSOffer):
         self._reserved_terms_to_offer_term_code = defaultdict(dict)
 
     def get_sku(self,
-                instance_type,               # type: str
-                operating_system=None,       # type: Optional[str]
-                tenancy=None,                # type: Optional[str]
-                license_model=None,          # type: Optional[str]
+                instance_type,  # type: str
+                operating_system=None,  # type: Optional[str]
+                tenancy=None,  # type: Optional[str]
+                license_model=None,  # type: Optional[str]
                 preinstalled_software=None,  # type: Optional[str]
-                region=None,                 # type: Optional[str]
-                capacity_status=None         # type: Optional[str]
+                region=None,  # type: Optional[str]
+                capacity_status=None  # type: Optional[str]
                 ):
         # type: (...) -> str
         region = self._normalize_region(region)
@@ -194,13 +193,13 @@ class EC2Offer(AWSOffer):
         return sku
 
     def ondemand_hourly(self,
-                        instance_type,               # type: str
-                        operating_system=None,       # type: Optional[str]
-                        tenancy=None,                # type: Optional[str]
-                        license_model=None,          # type: Optional[str]
+                        instance_type,  # type: str
+                        operating_system=None,  # type: Optional[str]
+                        tenancy=None,  # type: Optional[str]
+                        license_model=None,  # type: Optional[str]
                         preinstalled_software=None,  # type: Optional[str]
-                        region=None,                 # type: Optional[str]
-                        capacity_status=None         # type: Optional[str]
+                        region=None,  # type: Optional[str]
+                        capacity_status=None  # type: Optional[str]
                         ):
         # type: (...) -> float
         sku = self.get_sku(
@@ -219,17 +218,17 @@ class EC2Offer(AWSOffer):
         return float(raw_price)
 
     def reserved_hourly(self,
-                        instance_type,                               # type: str
-                        operating_system=None,                       # type: Optional[str]
-                        tenancy=None,                                # type: Optional[str]
-                        license_model=None,                          # type: Optional[str]
-                        preinstalled_software=None,                  # type: Optional[str]
-                        lease_contract_length=None,                  # type: Optional[str]
+                        instance_type,  # type: str
+                        operating_system=None,  # type: Optional[str]
+                        tenancy=None,  # type: Optional[str]
+                        license_model=None,  # type: Optional[str]
+                        preinstalled_software=None,  # type: Optional[str]
+                        lease_contract_length=None,  # type: Optional[str]
                         offering_class=EC2_OFFERING_CLASS.STANDARD,  # type: str
-                        purchase_option=None,                        # type: Optional[str]
-                        amortize_upfront=True,                       # type: bool
-                        region=None,                                 # type: Optional[str]
-                        capacity_status=None,                        # type: Optional[str]
+                        purchase_option=None,  # type: Optional[str]
+                        amortize_upfront=True,  # type: bool
+                        region=None,  # type: Optional[str]
+                        capacity_status=None,  # type: Optional[str]
                         ):
         # type: (...) -> float
         self._validate_reserved_price_args(
@@ -306,16 +305,16 @@ class EC2Offer(AWSOffer):
                          .format(lease_contract_length))
 
     def reserved_upfront(self,
-                         instance_type,                               # type: str
-                         operating_system=None,                       # type: Optional[str]
-                         tenancy=None,                                # type: Optional[str]
-                         license_model=None,                          # type: Optional[str]
-                         preinstalled_software=None,                  # type: Optional[str]
-                         lease_contract_length=None,                  # type: Optional[str]
+                         instance_type,  # type: str
+                         operating_system=None,  # type: Optional[str]
+                         tenancy=None,  # type: Optional[str]
+                         license_model=None,  # type: Optional[str]
+                         preinstalled_software=None,  # type: Optional[str]
+                         lease_contract_length=None,  # type: Optional[str]
                          offering_class=EC2_OFFERING_CLASS.STANDARD,  # type: str
-                         purchase_option=None,                        # type: Optional[str]
-                         region=None,                                 # type: Optional[str]
-                         capacity_status=None,                        # type: Optional[str]
+                         purchase_option=None,  # type: Optional[str]
+                         region=None,  # type: Optional[str]
+                         capacity_status=None,  # type: Optional[str]
                          ):
         # type: (...) -> float
         self._validate_reserved_price_args(
@@ -352,30 +351,31 @@ class EC2Offer(AWSOffer):
     @classmethod
     def _validate_reserved_price_args(cls,
                                       lease_contract_length,  # type: Optional[str]
-                                      offering_class,         # type: Optional[str]
-                                      purchase_option,        # type: Optional[str]
+                                      offering_class,  # type: Optional[str]
+                                      purchase_option,  # type: Optional[str]
                                       ):
         # type: (...) -> None
         if lease_contract_length not in EC2_LEASE_CONTRACT_LENGTH.values():
             valid_options = EC2_LEASE_CONTRACT_LENGTH.values()
             raise ValueError(
                 "Lease contract '{}' is invalid. Valid options are: {}"
-                .format(lease_contract_length, valid_options)
+                    .format(lease_contract_length, valid_options)
             )
 
         if offering_class not in EC2_OFFERING_CLASS.values():
             valid_options = EC2_OFFERING_CLASS.values()
             raise ValueError(
                 "Offering class '{}' is invalid. Valid options are: {}"
-                .format(offering_class, valid_options)
+                    .format(offering_class, valid_options)
             )
 
         if purchase_option not in EC2_PURCHASE_OPTION.values():
             valid_options = EC2_PURCHASE_OPTION.values()
             raise ValueError(
                 "Purchase option '{}' is invalid. Valid options are: {}"
-                .format(purchase_option, valid_options)
+                    .format(purchase_option, valid_options)
             )
+
 
 #       if (lease_contract_length == EC2_LEASE_CONTRACT_LENGTH.ONE_YEAR and
 #              offering_class == 'convertible'):
@@ -385,7 +385,6 @@ class EC2Offer(AWSOffer):
 
 @implements('AmazonRDS')
 class RDSOffer(AWSOffer):
-
     HOURS_IN_YEAR = 24 * 365
 
     def __init__(self, *args, **kwargs):
@@ -407,12 +406,12 @@ class RDSOffer(AWSOffer):
         self._reserved_terms_to_offer_term_code = defaultdict(dict)  # type: Dict[str, Dict]
 
     def get_sku(self,
-                instance_type,               # type: str
-                database_engine,             # type: str
-                license_model=None,          # type: Optional[str]
-                deployment_option=None,      # type: Optional[str]
-                database_edition=None,       # type: Optional[str]
-                region=None                  # type: Optional[str]
+                instance_type,  # type: str
+                database_engine,  # type: str
+                license_model=None,  # type: Optional[str]
+                deployment_option=None,  # type: Optional[str]
+                database_edition=None,  # type: Optional[str]
+                region=None  # type: Optional[str]
                 ):
         region = self._normalize_region(region)
         deployment_option = deployment_option or self.default_deployment_option
@@ -437,12 +436,12 @@ class RDSOffer(AWSOffer):
         return sku
 
     def ondemand_hourly(self,
-                        instance_type,               # type: str
-                        database_engine,             # type: str
-                        license_model=None,          # type: str
-                        deployment_option=None,      # type: Optional[str]
-                        database_edition=None,       # type: Optional[str]
-                        region=None                  # type: Optional[str]
+                        instance_type,  # type: str
+                        database_engine,  # type: str
+                        license_model=None,  # type: str
+                        deployment_option=None,  # type: Optional[str]
+                        database_edition=None,  # type: Optional[str]
+                        region=None  # type: Optional[str]
                         ):
         # type: (...) -> float
         sku = self.get_sku(
@@ -460,16 +459,16 @@ class RDSOffer(AWSOffer):
         return float(raw_price)
 
     def reserved_hourly(self,
-                        instance_type,               # type: str
-                        database_engine,             # type: str
-                        license_model=None,          # type: str
-                        deployment_option=None,      # type: Optional[str]
-                        lease_contract_length=None,                  # type: Optional[str]
+                        instance_type,  # type: str
+                        database_engine,  # type: str
+                        license_model=None,  # type: str
+                        deployment_option=None,  # type: Optional[str]
+                        lease_contract_length=None,  # type: Optional[str]
                         offering_class=RDS_OFFERING_CLASS.STANDARD,  # type: str
-                        purchase_option=None,                        # type: Optional[str]
-                        amortize_upfront=True,                       # type: bool
-                        database_edition=None,                       # type: Optional[str]
-                        region=None,                                 # type: Optional[str]
+                        purchase_option=None,  # type: Optional[str]
+                        amortize_upfront=True,  # type: bool
+                        database_edition=None,  # type: Optional[str]
+                        region=None,  # type: Optional[str]
                         ):
         # type: (...) -> float
         self._validate_reserved_price_args(
@@ -545,15 +544,15 @@ class RDSOffer(AWSOffer):
                          .format(lease_contract_length))
 
     def reserved_upfront(self,
-                         instance_type,                               # type: str
-                         database_engine,                             # type: str
-                         license_model=None,                          # type: str
-                         deployment_option=None,                      # type: Optional[str]
-                         lease_contract_length=None,                  # type: Optional[str]
+                         instance_type,  # type: str
+                         database_engine,  # type: str
+                         license_model=None,  # type: str
+                         deployment_option=None,  # type: Optional[str]
+                         lease_contract_length=None,  # type: Optional[str]
                          offering_class=RDS_OFFERING_CLASS.STANDARD,  # type: str
-                         purchase_option=None,                        # type: Optional[str]
-                         database_edition=None,                        # type: Optional[str]
-                         region=None,                                 # type: Optional[str]
+                         purchase_option=None,  # type: Optional[str]
+                         database_edition=None,  # type: Optional[str]
+                         region=None,  # type: Optional[str]
                          ):
         # type: (...) -> float
         self._validate_reserved_price_args(
@@ -589,27 +588,133 @@ class RDSOffer(AWSOffer):
     @classmethod
     def _validate_reserved_price_args(cls,
                                       lease_contract_length,  # type: Optional[str]
-                                      offering_class,         # type: str
-                                      purchase_option,        # type: Optional[str]
+                                      offering_class,  # type: str
+                                      purchase_option,  # type: Optional[str]
                                       ):
         # type: (...) -> None
         if lease_contract_length not in RDS_LEASE_CONTRACT_LENGTH.values():
             valid_options = RDS_LEASE_CONTRACT_LENGTH.values()
             raise ValueError(
                 "Lease contract '{}' is invalid. Valid options are: {}"
-                .format(lease_contract_length, valid_options)
+                    .format(lease_contract_length, valid_options)
             )
 
         if offering_class not in RDS_OFFERING_CLASS.values():
             valid_options = RDS_OFFERING_CLASS.values()
             raise ValueError(
                 "Offering class '{}' is invalid. Valid options are: {}"
-                .format(offering_class, valid_options)
+                    .format(offering_class, valid_options)
             )
 
         if purchase_option not in RDS_PURCHASE_OPTION.values():
             valid_options = RDS_PURCHASE_OPTION.values()
             raise ValueError(
                 "Purchase option '{}' is invalid. Valid options are: {}"
-                .format(purchase_option, valid_options)
+                    .format(purchase_option, valid_options)
             )
+
+
+@implements('AmazonElastiCache')
+class EcOffer(AWSOffer):
+    HOURS_IN_YEAR = 24 * 365
+
+    def __init__(self, *args, **kwargs):
+        super(EcOffer, self).__init__(*args, **kwargs)
+
+        self.default_deployment_option = 'Single-AZ'
+
+        self._reverse_sku = self._generate_reverse_sku_mapping(
+            'instanceType',
+            'cacheEngine',
+            'location',
+            product_families=['Cache Instance']
+        )
+
+        # Lazily-loaded cache to hold offerTermCodes within a SKU
+        self._reserved_terms_to_offer_term_code = defaultdict(dict)  # type: Dict[str, Dict]
+
+    def get_sku(self,
+                instance_type,  # type: str
+                cache_engine,  # type: str
+                region=None  # type: Optional[str]
+                ):
+        region = self._normalize_region(region)
+
+        attributes = [instance_type, cache_engine,
+                      region]  # type: List[str]
+
+        if not all(attributes):
+            raise ValueError("All attributes are required: {}"
+                             .format(attributes))
+        sku = self._reverse_sku.get(self.hash_attributes(*attributes))
+        if sku is None:
+            raise ValueError("Unable to lookup SKU for attributes: {}"
+                             .format(attributes))
+        return sku
+
+    def ondemand_hourly(self,
+                        instance_type,  # type: str
+                        cache_engine,  # type: str
+                        region=None  # type: Optional[str]
+                        ):
+        # type: (...) -> float
+        sku = self.get_sku(
+            instance_type,
+            cache_engine,
+            region=region
+        )
+        term = self._offer_data['terms']['OnDemand'][sku]
+        price_dimensions = next(six.itervalues(term))['priceDimensions']
+        price_dimension = next(six.itervalues(price_dimensions))
+        raw_price = price_dimension['pricePerUnit']['CNY']
+        return float(raw_price)
+
+
+@implements('AmazonES')
+class EsOffer(AWSOffer):
+    HOURS_IN_YEAR = 24 * 365
+
+    def __init__(self, *args, **kwargs):
+        super(EsOffer, self).__init__(*args, **kwargs)
+
+        self._reverse_sku = self._generate_reverse_sku_mapping(
+            'instanceType',
+            'cacheEngine',
+            'location',
+            product_families=['Elastic Search Instance']
+        )
+
+        # Lazily-loaded cache to hold offerTermCodes within a SKU
+        self._reserved_terms_to_offer_term_code = defaultdict(dict)  # type: Dict[str, Dict]
+
+    def get_sku(self,
+                instance_type,  # type: str
+                region=None  # type: Optional[str]
+                ):
+        region = self._normalize_region(region)
+
+        attributes = [instance_type, region]  # type: List[str]
+
+        if not all(attributes):
+            raise ValueError("All attributes are required: {}"
+                             .format(attributes))
+        sku = self._reverse_sku.get(self.hash_attributes(*attributes))
+        if sku is None:
+            raise ValueError("Unable to lookup SKU for attributes: {}"
+                             .format(attributes))
+        return sku
+
+    def ondemand_hourly(self,
+                        instance_type,  # type: str
+                        region=None  # type: Optional[str]
+                        ):
+        # type: (...) -> float
+        sku = self.get_sku(
+            instance_type,
+            region=region
+        )
+        term = self._offer_data['terms']['OnDemand'][sku]
+        price_dimensions = next(six.itervalues(term))['priceDimensions']
+        price_dimension = next(six.itervalues(price_dimensions))
+        raw_price = price_dimension['pricePerUnit']['CNY']
+        return float(raw_price)
