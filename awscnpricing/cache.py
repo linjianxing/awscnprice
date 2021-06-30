@@ -11,7 +11,7 @@ _CACHE_MINUTES = None
 
 
 DEFAULT_USE_CACHE = '0'  # False
-DEFAULT_CACHE_PATH = os.path.join('/tmp', 'awspricing')
+DEFAULT_CACHE_PATH = os.path.join('/tmp', 'awscnpricing')
 DEFAULT_CACHE_MINUTES = '1440'  # 1 day
 
 

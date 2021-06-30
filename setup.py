@@ -15,7 +15,7 @@ def get_version():
 
 
 setup(
-    name='awspricing',
+    name='awscnpricing',
     version=get_version(),
     description='An SDK for AWS(China) Pricing',
     long_description=open('README.rst').read(),

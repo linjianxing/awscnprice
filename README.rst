@@ -1,5 +1,5 @@
 ==========
-awspricing
+awscnpricing
 ==========
 
 A Python library for working with the `AWS (China) Price List API <http:://docs.amazonaws.cn/en_us/aws/latest/userguide/billing-and-payment.html>`_.
